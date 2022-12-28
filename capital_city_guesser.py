@@ -1,4 +1,5 @@
 import re
+
 from unidecode import unidecode
 
 
@@ -6,6 +7,7 @@ class CapitalCityGuesser:
     def __init__(self, country_data: dict) -> None:
         self.name = country_data["name"]
         self.capital = country_data["capital"]
+        self.attemp_count = 0
         self.guess_correct = False
 
         self.__capital_normalised = unidecode(country_data["capital"])
@@ -29,18 +31,22 @@ class CapitalCityGuesser:
                 if letter == letter_to_match
             ]
             self.__update_guess(letter_to_match, update_index_list)
+        self.attemp_count += 1
 
     def check_if_fully_guessed(self):
         if self.__capital_letter_list == self.__guess_list:
             self.guess_correct = True
-            print(f"You are correct! {self.capital} is the capital of {self.name}")
+            print(
+                f"""You are correct! {self.capital} is the capital of {self.name}. \nYou guessed correctly in {self.attemp_count} attempts!
+            """
+            )
 
     def __generate_blank_guess_list(self) -> None:
         blank_guess = ""
         regex_pattern = re.compile("[A-Z]")
         for value in self.__capital_letter_list:
             if regex_pattern.fullmatch(value) is None:
-                blank_guess += f"{value}"
+                blank_guess += value
             else:
                 blank_guess += "_"
         return list(blank_guess)
