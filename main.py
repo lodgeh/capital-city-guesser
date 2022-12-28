@@ -1,6 +1,8 @@
 import random
-from country_data import countries
+import sys
+
 from capital_city_guesser import CapitalCityGuesser
+from country_data import countries
 
 
 def get_random_country() -> dict:
@@ -9,14 +11,29 @@ def get_random_country() -> dict:
     return countries[random_country_int]
 
 
-def main():
-    random_country_dict = get_random_country()
+def setup_game():
+    random_country = get_random_country()
+    return CapitalCityGuesser(random_country)
 
-    game = CapitalCityGuesser(random_country_dict)
-    print(game.current_guess())
-    game.attempt("abcdefghijklmnopqrstuvwxyz")
-    print(game.current_guess())
-    game.check_if_fully_guessed()
+
+def check_if_too_many_attempts(game: CapitalCityGuesser):
+    if game.attemp_count == 3:
+        print("Game over!!! - you've had too many attempts!\n")
+        print(f"{game.capital} is the capital of {game.name}!")
+        sys.exit()
+
+
+def main():
+    game = setup_game()
+    print(f"\nWhat is the capital of {game.name}?\n")
+
+    while game.guess_correct is False:
+        check_if_too_many_attempts(game)
+        print("\t", game.current_guess(), "\n")
+        guess = input("Enter your guess: ")
+        game.attempt(guess)
+        print("\n\t", game.current_guess(), "\n")
+        game.check_if_fully_guessed()
 
 
 if __name__ == "__main__":
