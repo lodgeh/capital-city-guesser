@@ -7,6 +7,7 @@ class CapitalCityGuesser:
     def __init__(self, country_data: dict) -> None:
         self.name = country_data["name"]
         self.capital = country_data["capital"]
+        self.max_input_length = len(country_data["capital"])
         self.attemp_count = 0
         self.guess_correct = False
 
@@ -33,7 +34,7 @@ class CapitalCityGuesser:
             self.__update_guess(letter_to_match, update_index_list)
         self.attemp_count += 1
 
-    def check_if_fully_guessed(self):
+    def check_if_fully_guessed(self) -> None:
         if self.__capital_letter_list == self.__guess_list:
             self.guess_correct = True
             print(
