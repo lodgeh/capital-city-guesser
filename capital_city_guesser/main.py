@@ -11,28 +11,31 @@ def get_random_country() -> dict:
     return countries[random_country_int]
 
 
-def setup_game():
+def setup_game() -> CapitalCityGuesser:
     random_country = get_random_country()
     return CapitalCityGuesser(random_country)
 
 
-def check_if_too_many_attempts(game: CapitalCityGuesser):
+def check_if_too_many_attempts(game: CapitalCityGuesser) -> None:
     if game.attemp_count == 3:
         print("Game over!!! - you've had too many attempts!\n")
         print(f"{game.capital} is the capital of {game.name}!")
         sys.exit()
 
 
-def main():
+def main() -> None:
     game = setup_game()
     print(f"\nWhat is the capital of {game.name}?\n")
 
     while game.guess_correct is False:
         check_if_too_many_attempts(game)
-        print("\t", game.current_guess(), "\n")
-        guess = input("Enter your guess: ")
-        game.attempt(guess)
-        print("\n\t", game.current_guess(), "\n")
+        print("\n\t", game.current_guess(), "\n\n")
+        while True:
+            guess = input("Enter your guess: ")
+            if len(guess) <= game.max_input_length:
+                game.attempt(guess)
+                break
+            print("Your guess has too many characters")
         game.check_if_fully_guessed()
 
 
